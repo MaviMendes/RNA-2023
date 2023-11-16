@@ -8,7 +8,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.neural_network import MLPClassifier
 
 from sklearn.metrics import accuracy_score
-
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 
 
@@ -42,6 +42,26 @@ def process_columns(x):
     '''
 
     return x
+
+def plot_loss_curve(mlp):
+
+    loss_curve = mlp.loss_curve_
+    # draw the curve from loss_curve using matplotlib
+    plt.plot(loss_curve)
+    plt.xlabel('Iteration')
+    plt.ylabel('Loss')
+    plt.title('Loss Curve')
+    plt.show()
+
+def plot_confusion_matrix(testY,y_pred,mlp):
+
+    # code to plot the confusion matrix
+    cm = confusion_matrix(testY, y_pred, labels=mlp.classes_)
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm,display_labels=mlp.classes_)
+    disp.plot()
+    plt.show()
+
+
 #open document
 
 df = pd.read_csv('data.csv')
@@ -66,6 +86,9 @@ y = df.iloc[:, -1]
 x = process_columns(x)
 
 
+
+# 1 - Teste generico 
+
 # split test and train subsets
 
 trainX, testX, trainY, testY = train_test_split(x, y, test_size = 0.3)
@@ -79,6 +102,7 @@ mean_and_std = scaler.fit(trainX)
 
 # Perform standardization by centering and scaling.
 trainX_std = mean_and_std.transform(trainX)
+print(f'trainX_std:{trainX_std}')
 testX_std = mean_and_std.transform(testX)
 
 # Create the MLP
@@ -92,33 +116,62 @@ mlp_clf.fit(trainX_std, trainY)
 y_pred = mlp_clf.predict(testX_std)
 
 
-# feautures
+# features
 
 print(f"score: {mlp_clf.score(testX_std,testY)}\nloss:{mlp_clf.loss_}\nnumber of training samples:{mlp_clf.t_}\nnumber of features seen during fit:{mlp_clf.n_features_in_}\nnumber of iterations: {mlp_clf.n_iter_}\nnumber of layers: {mlp_clf.n_layers_}")
 
-# The ith element in the list represents the loss at the ith iteration.
 
-print(mlp_clf.loss_curve_)
 
 print('Accuracy: {:.2f}'.format(accuracy_score(testY, y_pred)))
 
-loss_curve = mlp_clf.loss_curve_
-# draw the curve from loss_curve using matplotlib
-plt.plot(loss_curve)
-plt.xlabel('Iteration')
-plt.ylabel('Loss')
-plt.title('Loss Curve')
-plt.show()
+plot_loss_curve(mlp_clf)
+plot_confusion_matrix(testY,y_pred,mlp_clf)
 
 
-# code to plot the confusion matrix
 
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+"""
+Dataset partitioning 
 
-cm = confusion_matrix(testY, y_pred, labels=mlp_clf.classes_)
-disp = ConfusionMatrixDisplay(confusion_matrix=cm,display_labels=mlp_clf.classes_)
-disp.plot()
-plt.show()
+hold-out: split up your dataset into a ‘train’ and ‘test’ set
+
+cross-validation: Cross-validation or ‘k-fold cross-validation’ is when the dataset is randomly split up into ‘k’ groups.
+One of the groups is used as the test set and the rest are used as the training set. 
+The model is trained on the training set and scored on the test set. 
+Then the process is repeated until each unique group as been used as the test set.
+
+https://medium.com/@jaz1/holdout-vs-cross-validation-in-machine-learning-7637112d3f8f
+
+https://scikit-learn.org/stable/modules/cross_validation.html
+
+"""
+
+#Holdout 
+#cross-validation
+
+"""
+
+Topologies 
+
+neurons, layers, learning rate, etc
+MLPClassifier  parameters better explored
+
+
+"""
+
+"""
+Error analysis- loss function
+
+"""
+
+# The ith element in the list represents the loss at the ith iteration.
+
+# Erro médio absoluto ou MAE (do inglês Mean AbsoluteError)
+
+# Erro quadrático médio ou MSE (MeanSquared Error)
+
+# Raiz quadrada do erro quadrático médio ou RMSE (Root Mean Squared Error)
+
+# Coeficiente de determinação ou R2 (coefficient of determination)
 
 """
 
