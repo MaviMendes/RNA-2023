@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 
 from sklearn.neural_network import MLPClassifier
@@ -93,6 +93,7 @@ x = process_columns(x)
 
 trainX, testX, trainY, testY = train_test_split(x, y, test_size = 0.3)
 
+print(f'before scaler, trainx:{trainX.head(5)}')
 # Standardize features by removing the mean and scaling to unit variance.
 
 scaler = StandardScaler()
@@ -102,8 +103,32 @@ mean_and_std = scaler.fit(trainX)
 
 # Perform standardization by centering and scaling.
 trainX_std = mean_and_std.transform(trainX)
-print(f'trainX_std:{trainX_std}')
+print(f'after scaler, traninx:{trainX_std}')
+
 testX_std = mean_and_std.transform(testX)
+
+
+print(f'testx std:{testX_std}')
+
+#min max scaler: Transform features by scaling each feature to a given range.
+
+#This estimator scales and translates each feature individually such that it is in the given range on the training set, e.g. between zero and one.
+print('now using minmax scaler')
+
+scaler = MinMaxScaler(feature_range=(-1,1))
+
+# Compute the mean and std to be used for later scaling.
+min_max = scaler.fit(trainX)
+print(min_max.feature_names_in_)
+# Perform standardization by centering and scaling.
+trainX_std = min_max.transform(trainX)
+print(f'after scaler, traninx:{trainX_std}')
+
+testX_std = min_max.transform(testX)
+
+
+print(f'testx std:{testX_std}')
+"""
 
 # Create the MLP
 
@@ -127,7 +152,7 @@ print('Accuracy: {:.2f}'.format(accuracy_score(testY, y_pred)))
 plot_loss_curve(mlp_clf)
 plot_confusion_matrix(testY,y_pred,mlp_clf)
 
-
+"""
 
 """
 Dataset partitioning 
@@ -146,6 +171,8 @@ https://scikit-learn.org/stable/modules/cross_validation.html
 """
 
 #Holdout 
+
+
 #cross-validation
 
 """
