@@ -13,3 +13,10 @@ data_processing, avalatiation e plotting contém métodos auxiliares para, respe
 holdout e cross_validation utilizam avaliation e plotting para, em seus respectivos datasets, criar mlp, ver o score para cada função de ativação e resolvedor, e plotar a curva de perda por iteração, bem como a matriz de confusão
 
 Ao final da execução de holdout e cross_validation, podemos avaliar o desempenho dos diferentes MLPs criados, considerando as variações de activation function, solver e método de separação dos dados
+
+Quantidade de pessoas em cada classe:
+
+Responsável: 27
+Irresponsável: 26
+Intermediário: 21
+
